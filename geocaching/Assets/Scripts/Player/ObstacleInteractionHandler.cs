@@ -135,7 +135,7 @@ public class ObstacleInteractionHandler : MonoBehaviour
                 
             case ObstacleSpeedColorDiscrete.Zone.Green:
                 // Игрок в зелёной зоне - ничего не происходит
-                Debug.Log($"Player in safe zone. Speed: {currentSpeed:F2}, Zone: Green");
+               // Debug.Log($"Player in safe zone. Speed: {currentSpeed:F2}, Zone: Green");
                 break;
         }
     }
