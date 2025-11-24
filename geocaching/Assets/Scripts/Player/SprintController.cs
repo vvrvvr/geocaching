@@ -193,13 +193,12 @@ public class SprintController : MonoBehaviour
         
         // Плавное обновление слайдеров зон
         UpdateZoneSlidersSmooth();
-
-        // Пример ввода
-        if (Input.GetKeyDown(KeyCode.Space))
-            Tap();
     }
 
-    public void Tap()
+    /// <summary>
+    /// Регистрирует нажатие для увеличения скорости спринта.
+    /// </summary>
+    public void RegisterSprintTap()
     {
         float t = Time.time;
 

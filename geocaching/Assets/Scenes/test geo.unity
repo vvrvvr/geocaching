@@ -1884,6 +1884,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1405036713}
+  - component: {fileID: 1405036716}
   - component: {fileID: 1405036712}
   - component: {fileID: 1405036715}
   - component: {fileID: 1405036714}
@@ -1948,7 +1949,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStateManager: {fileID: 1405036715}
-  interactionKey: 32
 --- !u!114 &1405036715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1963,6 +1963,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stumblingDuration: 2
   fallingDuration: 3
+--- !u!114 &1405036716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405036711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 234d983f47e96674fb7e2e73747810f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprintKey: 32
 --- !u!1 &1410612807
 GameObject:
   m_ObjectHideFlags: 0

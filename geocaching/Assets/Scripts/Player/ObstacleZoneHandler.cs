@@ -17,9 +17,6 @@ public class ObstacleZoneHandler : MonoBehaviour
     [Tooltip("Контроллер состояния игрока")]
     public PlayerStateController playerStateManager;
     
-    [Header("Settings")]
-    [Tooltip("Клавиша для взаимодействия с препятствием")]
-    public KeyCode interactionKey = KeyCode.Space;
     
     // Структура для хранения данных о препятствии
     private struct ObstacleData
@@ -70,11 +67,13 @@ public class ObstacleZoneHandler : MonoBehaviour
         }
     }
     
-    void Update()
+    /// <summary>
+    /// Вызывается при нажатии клавиши спринта для проверки зон препятствий.
+    /// </summary>
+    public void OnSprintInput()
     {
-        // Проверяем нажатие пробела только если игрок в нормальном состоянии и в зоне препятствия
-        if (Input.GetKeyDown(interactionKey) && 
-            isInObstacle && 
+        // Проверяем зону только если игрок в нормальном состоянии и в зоне препятствия
+        if (isInObstacle && 
             playerStateManager != null && 
             playerStateManager.IsNormal)
         {
