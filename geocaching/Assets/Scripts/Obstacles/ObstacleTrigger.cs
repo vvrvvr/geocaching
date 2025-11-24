@@ -20,6 +20,11 @@ public class ObstacleTrigger : MonoBehaviour
     [Tooltip("Тег игрока для проверки коллизий")]
     public string playerTag = "Player";
     
+    [Header("Priority")]
+    [Tooltip("Приоритет препятствия. Чем выше значение, тем выше приоритет. Если игрок одновременно касается нескольких препятствий, используется то, у которого приоритет выше.")]
+    [Range(0, 100)]
+    public int priority = 0;
+    
     void Awake()
     {
         // Проверяем наличие коллайдера и выводим ошибку, если его нет
@@ -57,7 +62,7 @@ public class ObstacleTrigger : MonoBehaviour
             // Уведомляем систему о входе в препятствие через синглтон
             if (ObstacleInteractionHandler.Instance != null)
             {
-                ObstacleInteractionHandler.Instance.OnEnterObstacle(greenEnd, yellowEnd, redStart, obstacleSpeedColor);
+                ObstacleInteractionHandler.Instance.OnEnterObstacle(greenEnd, yellowEnd, redStart, obstacleSpeedColor, priority, this);
             }
         }
     }
@@ -71,7 +76,7 @@ public class ObstacleTrigger : MonoBehaviour
             // Уведомляем систему о выходе из препятствия через синглтон
             if (ObstacleInteractionHandler.Instance != null)
             {
-                ObstacleInteractionHandler.Instance.OnExitObstacle();
+                ObstacleInteractionHandler.Instance.OnExitObstacle(this);
             }
     }
 }
