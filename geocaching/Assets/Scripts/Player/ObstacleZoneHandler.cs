@@ -6,16 +6,16 @@ using System.Linq;
 /// Обработчик взаимодействия игрока с препятствиями.
 /// Проверяет зоны при нажатии пробела и вызывает соответствующие события.
 /// </summary>
-[AddComponentMenu("Gameplay/Obstacle Interaction Handler")]
-public class ObstacleInteractionHandler : MonoBehaviour
+[AddComponentMenu("Gameplay/Obstacle Zone Handler")]
+public class ObstacleZoneHandler : MonoBehaviour
 {
     // Статический доступ к экземпляру синглтона
-    private static ObstacleInteractionHandler instance;
-    public static ObstacleInteractionHandler Instance => instance;
+    private static ObstacleZoneHandler instance;
+    public static ObstacleZoneHandler Instance => instance;
     
     [Header("References")]
-    [Tooltip("Менеджер состояния игрока")]
-    public PlayerStateManager playerStateManager;
+    [Tooltip("Контроллер состояния игрока")]
+    public PlayerStateController playerStateManager;
     
     [Header("Settings")]
     [Tooltip("Клавиша для взаимодействия с препятствием")]
@@ -24,16 +24,16 @@ public class ObstacleInteractionHandler : MonoBehaviour
     // Структура для хранения данных о препятствии
     private struct ObstacleData
     {
-        public ObstacleSpeedColorDiscrete obstacle;
+        public ObstacleZoneVisualizer obstacle;
         public float greenEnd;
         public float yellowEnd;
         public float redStart;
         public int priority;
-        public ObstacleTrigger trigger;
+        public ObstacleZoneTrigger trigger;
     }
     
-    // Словарь активных препятствий (ключ - ObstacleTrigger, значение - данные препятствия)
-    private Dictionary<ObstacleTrigger, ObstacleData> activeObstacles = new Dictionary<ObstacleTrigger, ObstacleData>();
+    // Словарь активных препятствий (ключ - ObstacleZoneTrigger, значение - данные препятствия)
+    private Dictionary<ObstacleZoneTrigger, ObstacleData> activeObstacles = new Dictionary<ObstacleZoneTrigger, ObstacleData>();
     
     // Текущее активное препятствие (с максимальным приоритетом)
     private ObstacleData? currentActiveObstacle = null;
@@ -50,14 +50,14 @@ public class ObstacleInteractionHandler : MonoBehaviour
         }
         else if (instance != this)
         {
-            Debug.LogWarning("Multiple ObstacleInteractionHandler instances detected. Only one should exist.");
+            Debug.LogWarning("Multiple ObstacleZoneHandler instances detected. Only one should exist.");
             return;
         }
         
-        // Если менеджер состояния не указан, пытаемся найти его на этом же объекте
+        // Если контроллер состояния не указан, пытаемся найти его на этом же объекте
         if (playerStateManager == null)
         {
-            playerStateManager = GetComponent<PlayerStateManager>();
+            playerStateManager = GetComponent<PlayerStateController>();
         }
     }
     
@@ -85,7 +85,7 @@ public class ObstacleInteractionHandler : MonoBehaviour
     /// <summary>
     /// Вызывается при входе игрока в зону препятствия.
     /// </summary>
-    public void OnEnterObstacle(float greenEnd, float yellowEnd, float redStart, ObstacleSpeedColorDiscrete obstacle, int priority, ObstacleTrigger trigger)
+    public void OnEnterObstacle(float greenEnd, float yellowEnd, float redStart, ObstacleZoneVisualizer obstacle, int priority, ObstacleZoneTrigger trigger)
     {
         // Добавляем препятствие в словарь активных
         ObstacleData data = new ObstacleData
@@ -107,7 +107,7 @@ public class ObstacleInteractionHandler : MonoBehaviour
     /// <summary>
     /// Вызывается при выходе игрока из зоны препятствия.
     /// </summary>
-    public void OnExitObstacle(ObstacleTrigger trigger)
+    public void OnExitObstacle(ObstacleZoneTrigger trigger)
     {
         // Удаляем препятствие из словаря активных
         if (activeObstacles.ContainsKey(trigger))
@@ -129,9 +129,9 @@ public class ObstacleInteractionHandler : MonoBehaviour
             // Нет активных препятствий - сбрасываем
             currentActiveObstacle = null;
             
-            if (SprintRhythmController.Instance != null)
+            if (SprintController.Instance != null)
             {
-                SprintRhythmController.Instance.ClearActiveObstacle();
+                SprintController.Instance.ClearActiveObstacle();
             }
             return;
         }
@@ -148,10 +148,10 @@ public class ObstacleInteractionHandler : MonoBehaviour
         {
             currentActiveObstacle = maxPriorityObstacle;
             
-            // Обновляем границы зон в SprintRhythmController для отображения на слайдерах
-            if (SprintRhythmController.Instance != null)
+            // Обновляем границы зон в SprintController для отображения на слайдерах
+            if (SprintController.Instance != null)
             {
-                SprintRhythmController.Instance.SetActiveObstacle(maxPriorityObstacle.obstacle);
+                SprintController.Instance.SetActiveObstacle(maxPriorityObstacle.obstacle);
             }
         }
     }
@@ -167,27 +167,27 @@ public class ObstacleInteractionHandler : MonoBehaviour
         ObstacleData activeData = currentActiveObstacle.Value;
         
         // Получаем текущую нормализованную скорость
-        float currentSpeed = SprintRhythmController.NormalizedSpeed;
+        float currentSpeed = SprintController.NormalizedSpeed;
         
         // Определяем зону на основе текущего активного препятствия
-        ObstacleSpeedColorDiscrete.Zone currentZone = GetZoneBySpeed(currentSpeed, activeData);
+        ObstacleZoneVisualizer.Zone currentZone = GetZoneBySpeed(currentSpeed, activeData);
         
         // Вызываем соответствующее событие
         switch (currentZone)
         {
-            case ObstacleSpeedColorDiscrete.Zone.Yellow:
+            case ObstacleZoneVisualizer.Zone.Yellow:
                 // Игрок в жёлтой зоне - спотыкается
                 playerStateManager.StartStumbling();
                 Debug.Log($"Player stumbled! Speed: {currentSpeed:F2}, Zone: Yellow, Obstacle: {activeData.trigger.gameObject.name}, Priority: {activeData.priority}");
                 break;
                 
-            case ObstacleSpeedColorDiscrete.Zone.Red:
+            case ObstacleZoneVisualizer.Zone.Red:
                 // Игрок в красной зоне - падает
                 playerStateManager.StartFalling();
                 Debug.Log($"Player fell! Speed: {currentSpeed:F2}, Zone: Red, Obstacle: {activeData.trigger.gameObject.name}, Priority: {activeData.priority}");
                 break;
                 
-            case ObstacleSpeedColorDiscrete.Zone.Green:
+            case ObstacleZoneVisualizer.Zone.Green:
                 // Игрок в зелёной зоне - ничего не происходит
                // Debug.Log($"Player in safe zone. Speed: {currentSpeed:F2}, Zone: Green");
                 break;
@@ -197,13 +197,13 @@ public class ObstacleInteractionHandler : MonoBehaviour
     /// <summary>
     /// Определяет зону по текущей скорости на основе данных препятствия.
     /// </summary>
-    private ObstacleSpeedColorDiscrete.Zone GetZoneBySpeed(float speed, ObstacleData data)
+    private ObstacleZoneVisualizer.Zone GetZoneBySpeed(float speed, ObstacleData data)
     {
         if (speed <= data.greenEnd)
-            return ObstacleSpeedColorDiscrete.Zone.Green;
+            return ObstacleZoneVisualizer.Zone.Green;
         if (speed <= data.yellowEnd)
-            return ObstacleSpeedColorDiscrete.Zone.Yellow;
-        return ObstacleSpeedColorDiscrete.Zone.Red;
+            return ObstacleZoneVisualizer.Zone.Yellow;
+        return ObstacleZoneVisualizer.Zone.Red;
     }
 }
 

@@ -1,8 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-[AddComponentMenu("Gameplay/Obstacle Speed Color (Discrete + Smooth Zone Enter)")]
-public class ObstacleSpeedColorDiscrete : MonoBehaviour
+[AddComponentMenu("Gameplay/Obstacle Zone Visualizer")]
+public class ObstacleZoneVisualizer : MonoBehaviour
 {
     public enum Zone { Green = 0, Yellow = 1, Red = 2 }
 
@@ -11,10 +11,10 @@ public class ObstacleSpeedColorDiscrete : MonoBehaviour
     public Renderer targetRenderer;
     
     [Header("Speed Source")]
-    [Tooltip("Если включено, будет использовать статический доступ к SprintRhythmController (рекомендуется). Если выключено, можно указать конкретный источник вручную.")]
+    [Tooltip("Если включено, будет использовать статический доступ к SprintController (рекомендуется). Если выключено, можно указать конкретный источник вручную.")]
     public bool useStaticAccess = true;
     [Tooltip("Источник нормализованной скорости 0..1 (используется только если useStaticAccess = false)")]
-    public SprintRhythmController playerSpeedSource;
+    public SprintController playerSpeedSource;
 
     [Header("Zones (0..1)")]
     [Range(0f, 1f)] public float greenEnd  = 0.33f;
@@ -65,7 +65,7 @@ public class ObstacleSpeedColorDiscrete : MonoBehaviour
         float speed = 0f;
         if (useStaticAccess)
         {
-            speed = Mathf.Clamp01(SprintRhythmController.NormalizedSpeed);
+            speed = Mathf.Clamp01(SprintController.NormalizedSpeed);
         }
         else
         {

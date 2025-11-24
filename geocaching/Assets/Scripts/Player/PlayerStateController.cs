@@ -4,8 +4,8 @@ using UnityEngine;
 /// <summary>
 /// Управление состояниями игрока (нормальное/спотыкание/падение).
 /// </summary>
-[AddComponentMenu("Gameplay/Player State Manager")]
-public class PlayerStateManager : MonoBehaviour
+[AddComponentMenu("Gameplay/Player State Controller")]
+public class PlayerStateController : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -45,7 +45,7 @@ public class PlayerStateManager : MonoBehaviour
         if (currentState == PlayerState.Normal)
         {
             SetState(PlayerState.Stumbling);
-            Debug.Log($"[PlayerStateManager] Событие: СПОТЫКНУЛСЯ. Длительность: {stumblingDuration} сек.");
+            Debug.Log($"[PlayerStateController] Событие: СПОТЫКНУЛСЯ. Длительность: {stumblingDuration} сек.");
             OnStumblingStarted?.Invoke();
             
             // Запускаем корутину для автоматического восстановления
@@ -65,7 +65,7 @@ public class PlayerStateManager : MonoBehaviour
         if (currentState == PlayerState.Normal)
         {
             SetState(PlayerState.Falling);
-            Debug.Log($"[PlayerStateManager] Событие: УПАЛ. Длительность: {fallingDuration} сек.");
+            Debug.Log($"[PlayerStateController] Событие: УПАЛ. Длительность: {fallingDuration} сек.");
             OnFallingStarted?.Invoke();
             
             // Запускаем корутину для автоматического восстановления
@@ -93,7 +93,7 @@ public class PlayerStateManager : MonoBehaviour
             }
             
             SetState(PlayerState.Normal);
-            Debug.Log($"[PlayerStateManager] Событие: ПРИШЁЛ В СЕБЯ (было состояние: {previousState}).");
+            Debug.Log($"[PlayerStateController] Событие: ПРИШЁЛ В СЕБЯ (было состояние: {previousState}).");
             OnRecovered?.Invoke();
         }
     }

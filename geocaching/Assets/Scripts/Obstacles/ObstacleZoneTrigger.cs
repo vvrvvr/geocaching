@@ -5,12 +5,12 @@ using UnityEngine;
 /// Передаёт информацию о границах зон при коллизии с игроком.
 /// </summary>
 [RequireComponent(typeof(Collider))]
-[AddComponentMenu("Gameplay/Obstacle Trigger")]
-public class ObstacleTrigger : MonoBehaviour
+[AddComponentMenu("Gameplay/Obstacle Zone Trigger")]
+public class ObstacleZoneTrigger : MonoBehaviour
 {
     [Header("Obstacle Reference")]
     [Tooltip("Ссылка на скрипт препятствия с настройками зон")]
-    public ObstacleSpeedColorDiscrete obstacleSpeedColor;
+    public ObstacleZoneVisualizer obstacleSpeedColor;
     
     [Header("Collider")]
     [Tooltip("Коллайдер-триггер для обнаружения игрока. Если не указан, будет найден автоматически.")]
@@ -30,7 +30,7 @@ public class ObstacleTrigger : MonoBehaviour
         // Проверяем наличие коллайдера и выводим ошибку, если его нет
         if (triggerCollider == null)
         {
-            Debug.LogError($"[ObstacleTrigger] Нет коллайдера на объекте '{gameObject.name}'. Добавьте Collider компонент и перетащите его в поле 'Trigger Collider' или установите на этом же GameObject.", this);
+            Debug.LogError($"[ObstacleZoneTrigger] Нет коллайдера на объекте '{gameObject.name}'. Добавьте Collider компонент и перетащите его в поле 'Trigger Collider' или установите на этом же GameObject.", this);
             return;
         }
         
@@ -40,7 +40,7 @@ public class ObstacleTrigger : MonoBehaviour
         // Если препятствие не указано, пытаемся найти его на этом же объекте
         if (obstacleSpeedColor == null)
         {
-            obstacleSpeedColor = GetComponent<ObstacleSpeedColorDiscrete>();
+            obstacleSpeedColor = GetComponent<ObstacleZoneVisualizer>();
         }
     }
     
@@ -60,9 +60,9 @@ public class ObstacleTrigger : MonoBehaviour
             );
             
             // Уведомляем систему о входе в препятствие через синглтон
-            if (ObstacleInteractionHandler.Instance != null)
+            if (ObstacleZoneHandler.Instance != null)
             {
-                ObstacleInteractionHandler.Instance.OnEnterObstacle(greenEnd, yellowEnd, redStart, obstacleSpeedColor, priority, this);
+                ObstacleZoneHandler.Instance.OnEnterObstacle(greenEnd, yellowEnd, redStart, obstacleSpeedColor, priority, this);
             }
         }
     }
@@ -74,9 +74,9 @@ public class ObstacleTrigger : MonoBehaviour
             return;
         
             // Уведомляем систему о выходе из препятствия через синглтон
-            if (ObstacleInteractionHandler.Instance != null)
+            if (ObstacleZoneHandler.Instance != null)
             {
-                ObstacleInteractionHandler.Instance.OnExitObstacle(this);
+                ObstacleZoneHandler.Instance.OnExitObstacle(this);
             }
     }
 }

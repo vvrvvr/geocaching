@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SprintRhythmController : MonoBehaviour
+public class SprintController : MonoBehaviour
 {
     // Статический доступ к экземпляру контроллера
-    private static SprintRhythmController instance;
-    public static SprintRhythmController Instance => instance;
+    private static SprintController instance;
+    public static SprintController Instance => instance;
     
     // Статическое свойство для быстрого доступа к нормализованной скорости
     public static float NormalizedSpeed => instance != null ? instance.normalizedValue : 0f;
@@ -49,7 +49,7 @@ public class SprintRhythmController : MonoBehaviour
     
     [Header("Obstacle Reference")]
     [Tooltip("Ссылка на скрипт препятствия для получения границ зон (для тестового вызова по клавише A)")]
-    public ObstacleSpeedColorDiscrete obstacleSpeedColor;
+    public ObstacleZoneVisualizer obstacleSpeedColor;
 
     private float emaInterval;
     private float lastTapTime = -1f;
@@ -57,8 +57,8 @@ public class SprintRhythmController : MonoBehaviour
     private float smoothSpeed = 0f;
     private bool initialized = false;
     
-    // Активное препятствие (устанавливается через ObstacleInteractionHandler)
-    private ObstacleSpeedColorDiscrete activeObstacle = null;
+    // Активное препятствие (устанавливается через ObstacleZoneHandler)
+    private ObstacleZoneVisualizer activeObstacle = null;
     
     // Целевые значения для плавной интерполяции слайдеров зон
     private float targetGreenEnd = 0f;
@@ -74,7 +74,7 @@ public class SprintRhythmController : MonoBehaviour
         }
         else if (instance != this)
         {
-            Debug.LogWarning("Multiple SprintRhythmController instances detected. Only one should exist.");
+            Debug.LogWarning("Multiple SprintController instances detected. Only one should exist.");
         }
     }
     
@@ -135,7 +135,7 @@ public class SprintRhythmController : MonoBehaviour
     /// </summary>
     public void UpdateZoneBoundaries()
     {
-        ObstacleSpeedColorDiscrete obstacle = activeObstacle ?? obstacleSpeedColor;
+        ObstacleZoneVisualizer obstacle = activeObstacle ?? obstacleSpeedColor;
         if (obstacle == null)
             return;
             
@@ -145,7 +145,7 @@ public class SprintRhythmController : MonoBehaviour
     /// <summary>
     /// Устанавливает активное препятствие и обновляет границы зон.
     /// </summary>
-    public void SetActiveObstacle(ObstacleSpeedColorDiscrete obstacle)
+    public void SetActiveObstacle(ObstacleZoneVisualizer obstacle)
     {
         activeObstacle = obstacle;
         if (obstacle != null)
@@ -168,10 +168,7 @@ public class SprintRhythmController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            UpdateZoneBoundaries();
-        }
+        
         // упадение значения при отсутствии нажатий
         if (initialized && Time.time - lastTapTime > decayDelay)
         {
