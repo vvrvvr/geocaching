@@ -170,6 +170,6 @@ public class ObstacleSpeedColorDiscrete : MonoBehaviour
     {
         greenEnd = this.greenEnd;
         yellowEnd = this.yellowEnd;
-        redStart = 1; // Красная зона начинается там, где заканчивается жёлтая
+        redStart = this.yellowEnd; // Красная зона начинается там, где заканчивается жёлтая
     }
 }

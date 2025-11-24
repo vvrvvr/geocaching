@@ -1479,8 +1479,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1405036713}
   - component: {fileID: 1405036712}
+  - component: {fileID: 1405036715}
+  - component: {fileID: 1405036714}
   m_Layer: 0
-  m_Name: SpeedManager
+  m_Name: PLAYER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1527,6 +1529,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1405036714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405036711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c9278f186f5877419b83d39e30cc01a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStateManager: {fileID: 1405036715}
+  interactionKey: 32
+--- !u!114 &1405036715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405036711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c542c4a666c6e524286ef7fb12a2ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stumblingDuration: 2
+  fallingDuration: 3
 --- !u!1 &1410612807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1891,8 +1921,10 @@ GameObject:
   - component: {fileID: 2065896063}
   - component: {fileID: 2065896062}
   - component: {fileID: 2065896061}
+  - component: {fileID: 2065896064}
   - component: {fileID: 2065896060}
   - component: {fileID: 2065896059}
+  - component: {fileID: 2065896065}
   m_Layer: 0
   m_Name: Base obstacle
   m_TagString: Untagged
@@ -2008,6 +2040,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065896064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065896058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e19389866c3074db0bcdd3f42a45a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleSpeedColor: {fileID: 2065896059}
+  triggerCollider: {fileID: 2065896065}
+  playerTag: Player
+--- !u!65 &2065896065
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065896058}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2108961583
 GameObject:
   m_ObjectHideFlags: 0
@@ -2247,5 +2315,5 @@ SceneRoots:
   - {fileID: 77322501}
   - {fileID: 2136625690}
   - {fileID: 251568209}
-  - {fileID: 1405036713}
   - {fileID: 2065896063}
+  - {fileID: 1405036713}

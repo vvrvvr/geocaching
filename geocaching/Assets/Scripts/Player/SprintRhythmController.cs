@@ -48,7 +48,7 @@ public class SprintRhythmController : MonoBehaviour
     public float zoneSmoothTime = 1f;
     
     [Header("Obstacle Reference")]
-    [Tooltip("Ссылка на скрипт препятствия для получения границ зон")]
+    [Tooltip("Ссылка на скрипт препятствия для получения границ зон (для тестового вызова по клавише A)")]
     public ObstacleSpeedColorDiscrete obstacleSpeedColor;
 
     private float emaInterval;
@@ -56,6 +56,9 @@ public class SprintRhythmController : MonoBehaviour
     private float normalizedValue = 0f;
     private float smoothSpeed = 0f;
     private bool initialized = false;
+    
+    // Активное препятствие (устанавливается через ObstacleInteractionHandler)
+    private ObstacleSpeedColorDiscrete activeObstacle = null;
     
     // Целевые значения для плавной интерполяции слайдеров зон
     private float targetGreenEnd = 0f;
@@ -127,12 +130,40 @@ public class SprintRhythmController : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Обновляет границы зон из указанного препятствия (для тестового вызова по клавише A).
+    /// </summary>
     public void UpdateZoneBoundaries()
     {
-        if (obstacleSpeedColor == null)
+        ObstacleSpeedColorDiscrete obstacle = activeObstacle ?? obstacleSpeedColor;
+        if (obstacle == null)
             return;
             
-        obstacleSpeedColor.GetZoneBoundaries(out targetGreenEnd, out targetYellowEnd, out targetRedStart);
+        obstacle.GetZoneBoundaries(out targetGreenEnd, out targetYellowEnd, out targetRedStart);
+    }
+    
+    /// <summary>
+    /// Устанавливает активное препятствие и обновляет границы зон.
+    /// </summary>
+    public void SetActiveObstacle(ObstacleSpeedColorDiscrete obstacle)
+    {
+        activeObstacle = obstacle;
+        if (obstacle != null)
+        {
+            obstacle.GetZoneBoundaries(out targetGreenEnd, out targetYellowEnd, out targetRedStart);
+        }
+    }
+    
+    /// <summary>
+    /// Очищает активное препятствие и сбрасывает границы зон.
+    /// </summary>
+    public void ClearActiveObstacle()
+    {
+        activeObstacle = null;
+        // Сбрасываем границы зон в ноль
+        targetGreenEnd = 0f;
+        targetYellowEnd = 0f;
+        targetRedStart = 0f;
     }
 
     void Update()
